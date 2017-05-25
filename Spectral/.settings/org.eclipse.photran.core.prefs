@@ -1,0 +1,7 @@
+EnableContentAssist=true
+EnableDeclView=true
+EnableHoverTip=true
+EnableVPG=true
+FortranIncludePaths=/Spectral\n
+FortranModulePaths=/Spectral\n
+eclipse.preferences.version=1
