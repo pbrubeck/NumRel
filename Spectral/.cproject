@@ -91,6 +91,8 @@
 									<listOptionValue builtIn="false" value="/opt/intel/compilers_and_libraries_2017.4.196/linux/daal/include"/>
 									<listOptionValue builtIn="false" value="/opt/intel/compilers_and_libraries_2017.4.196/linux/mkl/include/intel64_lin/lp64"/>
 								</option>
+								<option id="intel.linux.fortran.compiler.optimization.parallel.1835751475" superClass="intel.linux.fortran.compiler.optimization.parallel" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="intel.linux.fortran.compiler.cmdline.addlopts.1347751117" superClass="intel.linux.fortran.compiler.cmdline.addlopts" useByScannerDiscovery="false" value="-c -heap-arrays" valueType="string"/>
 								<inputType id="photran.managedbuild.tool.intel.fortran.compiler.input.278266792" superClass="photran.managedbuild.tool.intel.fortran.compiler.input"/>
 							</tool>
 							<tool id="photran.managedbuild.tool.intel.fortran.linker.exe.x86_64.release.1778048710" name="Intel(R) Fortran Linker" superClass="photran.managedbuild.tool.intel.fortran.linker.exe.x86_64.release">

@@ -1,10 +1,6 @@
 program main
     implicit none
-
-    !call poisson(n,[1.0d0,1.0d0],[1.0d0,-1.0d0],[1.0d0,-1.0d0])
-
-    call elliptic(32,32)
-
-
+    !call poisson(64,[1.0d0,1.0d0],[1.0d0,-1.0d0],[1.0d0,-1.0d0]);
+    call elliptic(64,64);
     print *, 'Program terminated.'
 end program main

@@ -1,5 +1,5 @@
 subroutine setbc(n,alph,beta,D,A, V,L,B,H)
-    ! Sets boundary conditions for a second-order differential operator.
+    !! Sets boundary conditions for a second-order differential operator.
     ! alph*u + beta*u' = g
     !
     ! Input args
@@ -14,8 +14,8 @@ subroutine setbc(n,alph,beta,D,A, V,L,B,H)
     ! L(n-2)         : corresponding eigenvalues
     ! B(2,n)         : boundary condition operator
     ! H(n,2)         : boundary condition dual basis
-    ! Q(n,2), tau(2) : QR decomposition of B' as elementary reflectors
 
+    use linalg
     implicit none
     integer, intent(in) :: n
     integer :: i, lwork, info, rd(2), ipiv(2)
@@ -37,8 +37,7 @@ subroutine setbc(n,alph,beta,D,A, V,L,B,H)
 
     ! Boundary condition basis (dual B*H=I)
     ! H(rd,:)=inv(B(:,rd));
-    H(rd,:)=B(:,rd);
-    call dgetri(2, H(rd,:), 2, ipiv, WORK, lwork, info)
+    H(rd,:)=matinv2(B(:,rd));
 
     ! Give-back matrix
     ! G=-B(:,rd)\B(:,kd);
