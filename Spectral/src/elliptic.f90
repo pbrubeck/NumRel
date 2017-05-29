@@ -1,4 +1,5 @@
 subroutine elliptic(m,n)
+    ! Solves separtable elliptic equtions
     use linalg
     implicit none
     integer, intent(in) :: m, n
@@ -10,23 +11,31 @@ subroutine elliptic(m,n)
     double precision :: uu(m,n), u0(2,2), u1(m,n), u2(m,n), BB1(2,2), BB2(2,2)
     double precision :: aux1(m,n), aux2(n,m)
     double precision :: Lij, WORK(8*(m+n))
-    double precision :: pi
-    parameter (pi=4*atan(1.0d0))
+    double precision, parameter :: pi=4*atan(1.0d0)
 
     lwork=8*(m+n);
 
     alph=[1.0d0,0.0d0,1.0d0,0.0d0];
     beta=[0.0d0,1.0d0,0.0d0,1.0d0];
 
+    ! Differential operators
+    ! TODO: user supplied
     call helmholtz(m, x, D1, A1);
     call helmholtz(n, y, D2, A2);
+
+    ! Find eigenfunctions V, boundary condition operator B and dual N
+    ! This is the most computationally expensive part
     call setbc(m, alph(1:2), beta(1:2), D1, A1, V1, L1, B1, N1);
     call setbc(n, alph(3:4), beta(3:4), D2, A2, V2, L2, B2, N2);
 
+    ! Problem data
+    ! TODO: user supplied
+    ! Boundary values
     bc1(1,:)=0.2*sin(3*pi*y);
     bc1(2,:)=0*y;
     bc2(:,1)=merge(sin(pi*x)**4, 0.0d0, x<0);
     bc2(:,2)=0*x;
+    ! Force term
     F(:,:)=0.0d0;
 
     ! Non-homogenous contribution
@@ -36,8 +45,7 @@ subroutine elliptic(m,n)
     BB1=matmul(B1, transpose(B1));
     BB2=matmul(B2, transpose(B2));
     u0=matmul(BB1, matmul(bc1, transpose(B2)))+matmul(matmul(B1, bc2), BB2);
-    ! TODO: Solve 2 by 2 Sylvester's equation
-    !call dgesyl('N', 'N', 1, 2, 2, BB1, 2, BB2, 2, u0, 2, 1.0d0, info);
+    u0=sylvester2(BB1, BB2, u0);
     uu=matmul(matmul(N1,u0), transpose(N2));
 
     ! uu=uu+(N1*bc1-uu)*P2'+P1*(bc2*N2'-uu);
@@ -49,11 +57,11 @@ subroutine elliptic(m,n)
     u2=uu;
     call dgemm('N', 'N', m, n, 2, 1.0d0, N1, m, bc1, 2, -1.0d0, u1, m);
     call dgemm('N', 'T', m, n, 2, 1.0d0, bc2, m, N2, n, -1.0d0, u2, m);
-    u1=u1-matmul(matmul(u1,transpose(B2)),matmul(matinv2(BB2),B2));
-    u2=u2-matmul(matmul(transpose(B1),matinv2(BB1)),matmul(B1,u2));
+    u1=u1-matmul(matmul(u1, transpose(B2)), matmul(matinv2(BB2), B2));
+    u2=u2-matmul(matmul(transpose(B1), matinv2(BB1)), matmul(B1, u2));
     uu=uu+u1+u2;
 
-    ! Right hand side
+    ! Right-hand side
     ! F=F-A1*uu-uu*A2';
     call dgemm('N', 'N', m, n, m, -1.0d0, A1, m, uu, m, 1.0d0, F, m);
     call dgemm('N', 'T', m, n, n, -1.0d0, uu, m, A2, n, 1.0d0, F, m);
@@ -67,6 +75,7 @@ subroutine elliptic(m,n)
     call dgetrf(m-2, m-2, W1, m-2, piv1, info);
     call dgetrf(n-2, n-2, W2, n-2, piv2, info);
     call dgetrs('N', m-2, m-2, W1, m-2, piv1, F(2:m-1,2:n-1) , m-2, info);
+    ! TODO: Fix this transposition
     aux2(2:n-1,2:m-1)=transpose(F(2:m-1,2:n-1));
     call dgetrs('N', n-2, n-2, W2, n-2, piv2, aux2(2:n-1,2:m-1), n-2, info);
     F(2:m-1,2:n-1)=transpose(aux2(2:n-1,2:m-1));
@@ -80,4 +89,7 @@ subroutine elliptic(m,n)
     call dgemm('N', 'N', m, n-2, m-2, 1.0d0, V1, m, F(2:m-1,2:n-1), m-2, 0.0d0, aux1(:,2:n-1), m);
     call dgemm('N', 'T', m, n  , n-2, 1.0d0, aux1(:,2:n-1), m, V2, n, 1.0d0, uu, m);
     call disp(uu,m,n);
+
+    !call tdez2d(m, n, x, y, uu, 2, pi/3, pi/5, 6)
+    !call frame()
 end

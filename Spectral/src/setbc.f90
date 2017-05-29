@@ -1,5 +1,5 @@
 subroutine setbc(n,alph,beta,D,A, V,L,B,H)
-    !! Sets boundary conditions for a second-order differential operator.
+    ! Sets boundary conditions for a second-order differential operator.
     ! alph*u + beta*u' = g
     !
     ! Input args
