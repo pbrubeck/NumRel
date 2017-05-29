@@ -38,5 +38,12 @@ subroutine poisson(n,alph,beta,bc)
     call dgesv(n-2, 1, A, n-2, ipiv, u(2:n-1), n-2, info);
     ! u(rd)=u(rd)+G*u(kd);
     call dgemv('N', 2, n-2, 1.0d0, G, 2, u(2:n-1), 1, 1.0d0, u, rd(2)-rd(1));
-    call disp(u,n,1);
+
+    open(UNIT=48,FILE='data/data1d.dat');
+    do i=1,n
+        write(48,*) x(i), u(i);
+    enddo
+    close(48);
+
+    call system('gnuplot -p ./data/plot1d.plt')
 end

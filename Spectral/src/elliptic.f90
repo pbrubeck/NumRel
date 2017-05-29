@@ -12,7 +12,6 @@ subroutine elliptic(m,n)
     double precision :: aux1(m,n), aux2(n,m)
     double precision :: Lij, WORK(8*(m+n))
     double precision, parameter :: pi=4*atan(1.0d0)
-
     lwork=8*(m+n);
 
     alph=[1.0d0,0.0d0,1.0d0,0.0d0];
@@ -61,6 +60,13 @@ subroutine elliptic(m,n)
     u2=u2-matmul(matmul(transpose(B1), matinv2(BB1)), matmul(B1, u2));
     uu=uu+u1+u2;
 
+    W1=V1(2:m-1,:);
+    W2=V2(2:n-1,:);
+    call dgetrf(m-2, m-2, W1, m-2, piv1, info);
+    call dgetrf(n-2, n-2, W2, n-2, piv2, info);
+
+    ! Pre-computation phase finished
+
     ! Right-hand side
     ! F=F-A1*uu-uu*A2';
     call dgemm('N', 'N', m, n, m, -1.0d0, A1, m, uu, m, 1.0d0, F, m);
@@ -68,16 +74,13 @@ subroutine elliptic(m,n)
 
     ! Inversion via diagonalization
     ! Analogous to Green's function
+
     ! First, eigenfunction expansion
     ! F(2:m-1,2:n-1)=V1(2:m-1,:)\F(2:m-1,2:n-1)/V2(2:n-1,:)';
-    W1=V1(2:m-1,:);
-    W2=V2(2:n-1,:);
-    call dgetrf(m-2, m-2, W1, m-2, piv1, info);
-    call dgetrf(n-2, n-2, W2, n-2, piv2, info);
-    call dgetrs('N', m-2, m-2, W1, m-2, piv1, F(2:m-1,2:n-1) , m-2, info);
+    call dgetrs('N', m-2, n-2, W1, m-2, piv1, F(2:m-1,2:n-1) , m-2, info);
     ! TODO: Fix this transposition
     aux2(2:n-1,2:m-1)=transpose(F(2:m-1,2:n-1));
-    call dgetrs('N', n-2, n-2, W2, n-2, piv2, aux2(2:n-1,2:m-1), n-2, info);
+    call dgetrs('N', n-2, m-2, W2, n-2, piv2, aux2(2:n-1,2:m-1), n-2, info);
     F(2:m-1,2:n-1)=transpose(aux2(2:n-1,2:m-1));
 
     ! Second, divide by the eigenvalues
@@ -88,8 +91,17 @@ subroutine elliptic(m,n)
     ! uu=uu+V1*F(2:m-1,2:n-1)*V2'
     call dgemm('N', 'N', m, n-2, m-2, 1.0d0, V1, m, F(2:m-1,2:n-1), m-2, 0.0d0, aux1(:,2:n-1), m);
     call dgemm('N', 'T', m, n  , n-2, 1.0d0, aux1(:,2:n-1), m, V2, n, 1.0d0, uu, m);
-    call disp(uu,m,n);
 
-    !call tdez2d(m, n, x, y, uu, 2, pi/3, pi/5, 6)
-    !call frame()
+    ! Plot the solution
+    open(UNIT=48,FILE='data/data2d.dat');
+    do i=1,m
+        do j=1,n
+            write(48,*) x(i), y(j), uu(i,j), uu(i,j);
+        enddo
+        write(48,*);
+    enddo
+    close(48);
+
+    print *, 'Computation terminated.'
+    call system('gnuplot -p ./data/surf.plt')
 end
