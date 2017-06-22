@@ -1,0 +1,55 @@
+\section{Introduction}
+\begin{frame}{Our goal is to solve the general elliptic PDE}
+\begin{equation*}
+Au_{xx}+2Bu_{xy}+Cu_{yy}+Du_x+Eu_y+Fu+G=0,
+\end{equation*}
+with
+\begin{equation*}
+B^2-AC<0.
+\end{equation*}
+
+\bigskip
+Subject to boundary conditions
+\begin{equation*}
+\left( a + b \vec{n}\cdot\nabla)u\right|_{\partial \Omega}=g.
+\end{equation*}
+\end{frame}
+
+\begin{frame}{This equation arises in numerical relativity.}
+	
+The Hamiltonian constraint
+\begin{equation*}
+\bar{\nabla}^2 \psi - \frac{1}{8}\bar{R} \psi -\frac{1}{12} K^2 \psi^5 + \frac{1}{8}\bar{A}_{ij}\bar{A}^{ij}\psi^{-7}=-2\pi \psi^5 \rho.
+\end{equation*}
+	
+The lapse equation
+\begin{equation*}
+\nabla^2 \alpha = \alpha \left(K_{ij}K^{ij}+4\pi\left(\rho+S\right)\right).
+\end{equation*}
+
+Where  $\nabla^2$ is the Laplace-Beltrami operator
+\begin{equation*}
+\nabla^2 f = \frac{1}{\sqrt{\abs{g}}} \partial_i \left( \sqrt{\abs{g}} g^{ij} \partial_j f \right).
+\end{equation*}
+\end{frame}
+
+\begin{frame}{Spectral Methods can be used to represent the differential equation as an algebraic system of equations.}
+Consider the linear operators present in elliptic equations, they all have the form
+\begin{equation*}
+\mathcal{L}u=\partial_y^{e} \partial_x^{d} \left(c(x,y)  \partial_y^{b} \partial_x^{a} u \right),
+\end{equation*}
+where $a,b,d,e=0,1$. This can be represented with the matrix
+\begin{equation*}
+L=(E\kron D)\diag(C(:))(B\kron A),
+\end{equation*}
+where $A,D=1,\partial_x$; $B,E=1,\partial_y$; $C_{ij}=c(x_i,y_j)$; $X\kron Y$ is the Kronecker product, and $X(:)$ denotes vectorization. This allows the compact operation
+\begin{equation*}
+LX(:)=D\left(C\odot\left(AX\trans{B}\right)\right)\trans{E}
+\end{equation*}
+\end{frame}
+
+\begin{frame}{So the linear system has the form}
+\begin{equation*}
+\sum_{i} (E_i\kron D_i)\diag(C_i(:))(B_i\kron A_i) X(:) = F(:)
+\end{equation*}
+\end{frame}

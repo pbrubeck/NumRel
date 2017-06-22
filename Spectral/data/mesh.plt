@@ -11,7 +11,4 @@ set palette defined (0 0.0 0.0 0.5, \
 set autoscale z
 set xyplane 0.0
 
-#
-#set pm3d lighting specular 0.6
-#
-splot './data/data2d.dat'  with pm3d notitle
+splot './data/data2d.dat' with lines notitle

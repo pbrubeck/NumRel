@@ -1,0 +1,104 @@
+\section{Boundary Conditions}
+\begin{frame}{To impose boundary conditions we must replace equations on our system.}
+
+Now let $X,F\in\reals^{m\times n}$, $AX(:)=F(:)$ represents a $mn\times mn$ system of equations.
+
+Let $K=K_2\kron K_1$ be the matrix that keeps the interior elements of a vector, i.e.
+\begin{equation*}
+KX(:)=K_1 X \trans{K_2}=X(2:m-1,2:n-1).
+\end{equation*}	
+
+We discard the outer equations by multiplying the system by $K$ 
+\begin{equation*}
+KAX(:)=KF(:).
+\end{equation*}
+Now  we have room at the boundary to impose the BCs
+\begin{equation*}
+BX(:)=b.
+\end{equation*}
+
+\end{frame}
+
+\begin{frame}{The algebraic system becomes}
+\begin{equation*}
+\matlabmatrix{KA; B}X(:)=\matlabmatrix{KF(:); b}.
+\end{equation*}
+
+\bigskip
+Easy, just build the matrix and invert it. Problem solved.
+
+\bigskip
+Actually, no. That will take a lot of memory and a very long time. We will work around a more clever way of solving this linear system.
+\end{frame}
+
+
+\begin{frame}
+We assume that boundary operators $\mathcal{B}_i=a_i+b_i \partial_i$ have constant coefficients along each boundary. This will allow us to decouple the degrees of freedom associated with the enforcement of BCs from our solution. We are able to express our solution with a basis that does this
+
+\begin{equation*}
+S_i=\matlabmatrix{E_i N_i}
+\end{equation*}
+
+\begin{equation*}
+B_iS_i=\matlabmatrix{B_iE_i B_iN_i}=\matlabmatrix{0 I}
+\end{equation*}
+
+\begin{align*}
+X&=(S_2\kron S_1) \tilde{X} \\
+&=(E_2\kron E_1)\tilde{X}_{11}
++(E_2\kron N_1)\tilde{X}_{\Gamma 1}\\
+&+(N_2\kron E_1)\tilde{X}_{1\Gamma}
++(N_2\kron N_1)\tilde{X}_{\Gamma \Gamma}\\
+&=E \tilde{X}_{11} + X_\Gamma
+\end{align*}
+
+\end{frame}
+
+\begin{frame}{We still have some freedom on the choice of the basis $S_i$.}
+For simplicity, let us impose the condition $KX(:)=\tilde{X}_{11}(:)$. This choice implies $K_iE_i=I$ and $K_iN_i=0$, i.e.
+\begin{equation*}
+\matlabmatrix{K_i; B_i} \matlabmatrix{E_i N_i} = \matlabmatrix{I 0; 0 I}.
+\end{equation*}
+
+Hence,
+\begin{equation*}
+S_i = \matlabmatrix{E_i N_i} = \matlabmatrix{K_i; B_i}^{-1} = \matlabmatrix{I 0; B_{i,1} B_{i,\Gamma}}^{-1} = \matlabmatrix{I 0; G_i B_{i,\Gamma}^{-1}},
+\end{equation*}
+where
+\begin{equation*}
+G_i = -B_{i,\Gamma}^{-1}B_{i,1}.
+\end{equation*}
+
+\end{frame}
+
+
+\begin{frame}{In this basis, the boundary operators do not combine interior dofs.}
+\begin{align*}
+\matlabmatrix{{I\kron B_1}; {B_2\kron I}} X &= \matlabmatrix{{S_2\kron\left[0~I\right]}; {\left[0~I\right]\kron S_1}} \tilde{X}\\
+&=\matlabmatrix{{0} {E_2\kron I} {0} {N_2\kron I};
+	{0} {0} {I\kron E_1}  {I\kron N_1}} \matlabmatrix{\tilde{X}_{11}; \tilde{X}_{\Gamma 1}; \tilde{X}_{1 \Gamma}; \tilde{X}_{\Gamma\Gamma}}
+\end{align*}
+
+Note that $\tilde{X}_{11}$ does not appear on the equations. The solution to the system $BX(:)=b$ by least squares yields
+\begin{equation*}
+X_\Gamma = X_0 + (N_1 b_1 - X_0)P_2 + P_1 (b_2 \trans{N_2} - X_0 )
+\end{equation*}
+
+\end{frame}
+
+\begin{frame}{Boundary conditions have been decoupled!}
+At this point $X_\Gamma$ has been determined, and can be moved to the RHS.
+
+\begin{equation*}
+\left(KAE \right) \tilde{X}_{11}(:) = K\left(F(:)-AX_\Gamma(:)\right)
+\end{equation*}
+
+The matrix $\Sigma=KAE$ is nothing more than the Schur complement of the system.
+
+\bigskip
+And recall that the final solution can be obtained from
+\begin{equation*}
+X=E\tilde{X}_{11} + X_\Gamma.
+\end{equation*}
+
+\end{frame}

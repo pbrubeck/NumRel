@@ -1,0 +1,35 @@
+\section{Solving the Equation}
+
+\begin{frame}{The final step seems pretty obvious: invert $\Sigma$.}
+Well, that's a huge problem. The matrix $\Sigma$ is very large and dense, but still, posses a structure that can be exploited.
+
+\end{frame}
+
+\begin{frame}{Suppose that $\Sigma$ can be diagonalized by separable eigenvectors.}
+\begin{equation*}
+\Sigma = (V_2 \kron V_1) \Lambda (V_2^{-1} \kron V_1^{-1}).
+\end{equation*}
+which implies that $\Sigma$ may be expanded as a linear combination of terms which can be diagonalized by those eigenvectors
+\begin{equation*}
+\Sigma = s_0 I\kron I + I\kron \Sigma_1 + \Sigma_2 \kron I + \mathcal{O}(\Sigma_2\kron \Sigma_1).
+\end{equation*}
+We may find the eigenvectors form the first order terms
+\begin{equation*}
+\Sigma_i=V_i \Lambda_i V_i^{-1}.
+\end{equation*}
+And the eigenvalues should appear in
+\begin{equation*}
+\diag{\Lambda} = \diag\left((V_2^{-1} \kron V_1^{-1}) \Sigma (V_2 \kron V_1)\right).
+\end{equation*}
+\end{frame}
+
+\begin{frame}{The inverse operation becomes trivial and fast to compute.}
+\begin{equation*}
+\Sigma^{-1} = (V_2 \kron V_1) \Lambda^{-1} (V_2^{-1} \kron V_1^{-1}).
+\end{equation*}
+
+The previous result was valid only under the assumption of separability of the eigenvectors. But in the general case, this is the exact first-order perturbation approximation. This can be used as a \textbf{preconditioner for an iterative method}.
+
+\bigskip
+Hence, we must find the terms $\Sigma_1, \Sigma_2$ that appear in a Kronecker product with the identity in the expansion of $\Sigma$. 
+\end{frame}

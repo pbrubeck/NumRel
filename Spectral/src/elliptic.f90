@@ -1,21 +1,21 @@
 subroutine elliptic(m,n)
-    ! Solves separtable elliptic equtions
+    ! Solves separatable elliptic equations
     use linalg
+    use visual
     implicit none
     integer, intent(in) :: m, n
-    integer :: i, j, lwork, info, piv1(m-2), piv2(n-2)
+    integer :: i, j, info, piv1(m-2), piv2(n-2)
     double precision :: alph(4), beta(4)
     double precision :: x(m), y(n), bc1(2,n), bc2(m,2), F(m,n)
     double precision :: A1(m,m), D1(m,m), V1(m,m-2), W1(m-2,m-2), L1(m), B1(2,m), N1(m,2)
     double precision :: A2(n,n), D2(n,n), V2(n,n-2), W2(n-2,n-2), L2(n), B2(2,n), N2(n,2)
     double precision :: uu(m,n), u0(2,2), u1(m,n), u2(m,n), BB1(2,2), BB2(2,2)
     double precision :: aux1(m,n), aux2(n,m)
-    double precision :: Lij, WORK(8*(m+n))
+    double precision :: Lij
     double precision, parameter :: pi=4*atan(1.0d0)
-    lwork=8*(m+n);
 
-    alph=[1.0d0,0.0d0,1.0d0,0.0d0];
-    beta=[0.0d0,1.0d0,0.0d0,1.0d0];
+    alph=[1.0d0, 0.0d0, 1.0d0, 0.0d0];
+    beta=[0.0d0, 1.0d0, 0.0d0, 1.0d0];
 
     ! Differential operators
     ! TODO: user supplied
@@ -34,7 +34,7 @@ subroutine elliptic(m,n)
     bc1(2,:)=0*y;
     bc2(:,1)=merge(sin(pi*x)**4, 0.0d0, x<0);
     bc2(:,2)=0*x;
-    ! Force term
+    ! Source term
     F(:,:)=0.0d0;
 
     ! Non-homogenous contribution
@@ -93,15 +93,5 @@ subroutine elliptic(m,n)
     call dgemm('N', 'T', m, n  , n-2, 1.0d0, aux1(:,2:n-1), m, V2, n, 1.0d0, uu, m);
 
     ! Plot the solution
-    open(UNIT=48,FILE='data/data2d.dat');
-    do i=1,m
-        do j=1,n
-            write(48,*) x(i), y(j), uu(i,j), uu(i,j);
-        enddo
-        write(48,*);
-    enddo
-    close(48);
-
-    print *, 'Computation terminated.'
-    call system('gnuplot -p ./data/surf.plt')
+    call surf(m,n,x,y,uu);
 end
