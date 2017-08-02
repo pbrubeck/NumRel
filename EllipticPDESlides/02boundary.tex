@@ -33,7 +33,7 @@ Actually, no. That will take a lot of memory and a very long time. We will work 
 
 
 \begin{frame}
-We assume that boundary operators $\mathcal{B}_i=a_i+b_i \partial_i$ have constant coefficients along each boundary. This will allow us to decouple the degrees of freedom associated with the enforcement of BCs from our solution. We are able to express our solution with a basis that does this
+We assume that boundary operators $\mathcal{B}_i=\cos{\theta_i}+\sin{\theta_i} \partial_i$ have constant coefficients along each boundary. This will allow us to decouple the degrees of freedom associated with the enforcement of BCs from our solution. We are able to express our solution with a basis that does this
 
 \begin{equation*}
 S_i=\matlabmatrix{E_i N_i}
@@ -93,7 +93,7 @@ At this point $X_\Gamma$ has been determined, and can be moved to the RHS.
 \left(KAE \right) \tilde{X}_{11}(:) = K\left(F(:)-AX_\Gamma(:)\right)
 \end{equation*}
 
-The matrix $\Sigma=KAE$ is nothing more than the Schur complement of the system.
+The matrix $\tilde{A}=KAE$ is nothing more than the Schur complement of the system.
 
 \bigskip
 And recall that the final solution can be obtained from

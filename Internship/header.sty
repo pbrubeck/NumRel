@@ -1,0 +1,24 @@
+\ProvidesPackage{header}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,mexico]{babel}
+\usepackage[in]{fullpage}
+\usepackage{enumitem, multicol}
+\usepackage{amsthm, amsmath, amssymb, physics, dsfont, upgreek, siunitx}
+\usepackage{graphicx, epstopdf, float, subcaption, hyperref}
+%\usepackage{matlabmatrix}
+
+\graphicspath{{Figures/}}
+
+% Set theory
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\integers}{\mathbb{Z}}
+
+% Vector notation
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\uvec}[1]{\mathbf{\hat{#1}}}
+\newcommand{\trans}[1]{#1^\text{T}}
+\newcommand{\adj}[1]{#1^\dagger}
+
+\newcommand{\normalize}[1]{\frac{#1}{\norm{#1}}}
+\DeclareMathOperator{\diag}{diag}

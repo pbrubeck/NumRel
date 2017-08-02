@@ -1,13 +1,13 @@
 \section{Solving the Equation}
 
-\begin{frame}{The final step seems pretty obvious: invert $\Sigma$.}
-Well, that's a huge problem. The matrix $\Sigma$ is very large and dense, but still, posses a structure that can be exploited.
+\begin{frame}{The final step seems pretty obvious: invert $\tilde{A}$.}
+Well, that's a huge problem. The matrix $\tilde{A}$ is very large and dense, but still, posses a structure that can be exploited.
 
 \end{frame}
 
 \begin{frame}{Suppose that $\Sigma$ can be diagonalized by separable eigenvectors.}
 \begin{equation*}
-\Sigma = (V_2 \kron V_1) \Lambda (V_2^{-1} \kron V_1^{-1}).
+\tilde{A} = (V_2 \kron V_1) \Lambda (V_2^{-1} \kron V_1^{-1}).
 \end{equation*}
 which implies that $\Sigma$ may be expanded as a linear combination of terms which can be diagonalized by those eigenvectors
 \begin{equation*}

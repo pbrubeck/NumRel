@@ -1,0 +1,44 @@
+\documentclass[12pt]{article}
+\usepackage{header}
+
+\title{Verano de investigación de la AMC}
+\author{Pablo Brubeck}
+\date{Instituto de Ciencias Nucleares - UNAM\\Del 23 de mayo al 2 de agosto de 2017}
+
+\begin{document}
+
+\maketitle
+
+\section*{Información de la estancia}
+\begin{itemize}
+	\item[\textbf{Estudiante:}] Pablo Brubeck (ITESM Campus Monterrey).
+	
+	\item[\textbf{Asesor:}] Dr. Miguel Alcubierre (Instituto de Ciencias Nucleares - UNAM).
+	
+	\item[\textbf{Institución:}] Instituto de Ciencias Nucleares - UNAM, Ciudad de México.
+	
+	\item[\textbf{Proyecto:}] Métodos espectrales para la solución de las EDPs elípticas que surgen en la obtención de datos iniciales en relatividad numérica.
+\end{itemize}
+
+
+\section*{Logros y experiencia}
+
+En este proyecto se produjeron varios códigos de MATLAB para encontrar la métrica espacial en un tiempo inicial para diversos casos, resolviendo la restricción halmintoniana. Dicha ecuación diferencial fue resuelta numéricamente como un sistema algebráico utilizando métodos espectrales de colocación de Chebyshev. El proyecto se caracterizó por la aplicación de técnicas de alto orden y/o poco convencionales en el área de relatividad numérica, como es el desacoplamiento de las condiciones de frontera, el uso de precondicionadores separables en productos de Kronecker en el método del gradiente bi-conjugado y la implementación del método de análisis homotópico en la solución de problemas no-lineales.
+
+Los casos que fueron considerados en la solución de la restricción Halmintoniana fueron resultos con simetría axial:
+\begin{itemize}
+	\item Ondas de Brill.
+	\item Agujero negro con espín.
+	\item Sistema binario de agujeros negros con espín.
+\end{itemize}
+
+También se produjo en un solucionador de ecuaciónes auto-adjuntas de segundo órden con métodos espectrales para aplicarlo a la ecuación de lapso maximal.
+
+En un principio, los métodos espectrales parecían incompatibles con los códigos de evolución ya existentes, debido a que utilizaban un grid no uniforme. El método de colocación espectral no solo proporciona los valores de la solución en los nodos, sino que estos también representan los coeficientes de la expansión en una base de deltas de Kronecker discretas. Considerando lo anterior, se desarrollo un método de interpolación a un grid arbitrario que funciona a base de la transformada de rápida de Fourier no-uniforme (NFFT).
+
+En general, todos los métodos fueron planteados utilizando puramente álgebra matricial, lo cual permitió que fueran trabajados en un lenguaje de alto nivel sin comprometer la eficiencia, haciendo uso de librerias especializadas. Esto evito preocupaciones como el paralelismo y el manejo de memoria, las cuales ya son atendidas por las librerías, haciéndolos comptetitivos con sus contrapartes de orden inferior.
+
+Como proyecto secundario, se estudió el método discontinuo de Galerkin para la solución de leyes de conservación. Este método es ideal para resolver la ecuación de Vlasov, pero debido a la falta de tiempo no se pudo completar. Sin embargo, se implementó un esquema incodicionalmente estable para la evolución temporal de ecuaciones lineales mediante el método de la matriz exponencial y partición de operadores.
+
+
+\end{document}
